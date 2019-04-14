@@ -15,7 +15,7 @@ void main()
 flag[0]=flag[1]=0;
 turn=0;
 
-pthread t1,t2;
+pthread_t t1,t2;
 
 pthread_create(&t1,NULL,func1,&shared);
 pthread_create(&t2,NULL,func2,&shared);
@@ -27,7 +27,7 @@ printf("\n The final value of shared variable .: %d \n",shared);
 
 }
 
-void *fun1()
+void *func1()
 {
 
 printf("\n Thread 1 \n");
@@ -45,7 +45,7 @@ flag[0] = 0;
 
 }
 
-void *fun2()
+void *func2()
 {
 
 printf("\n Thread 2 \n");
