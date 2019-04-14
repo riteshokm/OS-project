@@ -1,3 +1,5 @@
+//Peterson's solution for two processess accessing the same shared variable
+
 #include<stdio.h>
 #include<unistd.h>
 #include<pthread.h>
@@ -38,8 +40,10 @@ void *func1()
 {
 
 printf("\n Thread 1 \n");
-flag[0] = 1;
-turn = 1;
+flag[0] = 1;  //Set flag[self] = 1 saying you want to acquire lock
+turn = 1;     //But, first give the other thread the chance to  acquire lock
+
+//Wait until the other thread looses the desire to acquire lock or it is your turn to get the lock.
 while(flag[1]==1 && turn==1);
 
 //Critical section (Only one thread can enter here at a time)
@@ -49,6 +53,7 @@ int x = shared;
 x++;
 shared = x;
 
+//You do not desire to acquire lock in future. This will allow the other thread to acquire the lock.
 flag[0] = 0;
 
 }
@@ -57,8 +62,10 @@ void *func2()
 {
 
 printf("\n Thread 2 \n");
-flag[1] = 1;
-turn = 0;
+flag[1] = 1;    //Set flag[self] = 1 saying you want to acquire lock
+turn = 0;       //But, first give the other thread the chance to  acquire lock
+
+//Wait until the other thread looses the desire to acquire lock or it is your turn to get the lock.
 while(flag[0]==1 && turn==0);
 
 //Critical section (Only one thread can enter here at a time)
@@ -68,6 +75,7 @@ int y = shared;
 y--;
 shared = y;
 
+//You do not desire to acquire lock in future. This will allow the other thread to acquire the lock.
 flag[1] = 0;
 
 }
