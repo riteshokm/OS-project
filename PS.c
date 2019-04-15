@@ -1,4 +1,4 @@
-//Peterson's solution for two processess accessing the same shared variable
+//Peterson's solution for two processess atrying to write on the same File
 
 #include<fcntl.h>
 #include<sys/types.h>
@@ -50,13 +50,9 @@ while(flag[1]==1 && turn==1);
 
 //Critical section (Only one thread can enter here at a time)
 
-printf("Thread 1 Entered ");
-int n,fd;
-char b[50];
-printf("\n Enter text into file .: ");
-n=read(0,b,50);
-fd = open("File.txt",O_CREAT|O_RDWR,0777);
-write(fd,b,n);
+int fd = open("File.txt",O_CREAT|O_RDWR,0777);
+printf("\n Thread 1 is writing into the File \n");
+write(fd,"Thread 1 written Data",22);
 
 //You do not desire to acquire lock in future. This will allow the other thread to acquire the lock.
 flag[0] = 0;
@@ -75,13 +71,9 @@ while(flag[0]==1 && turn==0);
 
 //Critical section (Only one thread can enter here at a time)
 
-printf("Thread 2 Entered ");
-int n,fd;
-char b[50];
-printf("\n Enter text into file .: ");
-n=read(0,b,50);
-fd = open("File.txt",O_CREAT|O_RDWR,0777);
-write(fd,b,n);
+int fd = open("File.txt",O_CREAT|O_RDWR,0777);
+printf("\n Thread 2 is writing into the File \n");
+write(fd,"Thread 2 written Data",22);
 
 //You do not desire to acquire lock in future. This will allow the other thread to acquire the lock.
 flag[1] = 0;
