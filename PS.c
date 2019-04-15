@@ -1,12 +1,14 @@
 //Peterson's solution for two processess accessing the same shared variable
 
+#include<fcntl.h>
+#include<sys/types.h>
+#include<sys/stat.h>
 #include<stdio.h>
 #include<unistd.h>
 #include<pthread.h>
 
 int flag[2];
 int turn;
-int shared = 1;
 
 void *func1();
 void *func2();
@@ -24,8 +26,8 @@ turn=0;
 pthread_t t1,t2;
 
 //Create two threads (both run there respective func)
-pthread_create(&t1,NULL,func1,&shared);
-pthread_create(&t2,NULL,func2,&shared);
+pthread_create(&t1,NULL,func1,NULL);
+pthread_create(&t2,NULL,func2,NULL);
 
 //Wait for the threads to end.  
 pthread_join(t1,NULL);
@@ -49,9 +51,12 @@ while(flag[1]==1 && turn==1);
 //Critical section (Only one thread can enter here at a time)
 
 printf("Thread 1 Entered ");
-int x = shared;
-x++;
-shared = x;
+int n,fd;
+char b[50];
+printf("\n Enter text into file .: ");
+n=read(0,b,50);
+fd = open("File.txt",O_CREAT|O_RDWR,0777);
+write(fd,b,n);
 
 //You do not desire to acquire lock in future. This will allow the other thread to acquire the lock.
 flag[0] = 0;
@@ -71,9 +76,12 @@ while(flag[0]==1 && turn==0);
 //Critical section (Only one thread can enter here at a time)
 
 printf("Thread 2 Entered ");
-int y = shared;
-y--;
-shared = y;
+int n,fd;
+char b[50];
+printf("\n Enter text into file .: ");
+n=read(0,b,50);
+fd = open("File.txt",O_CREAT|O_RDWR,0777);
+write(fd,b,n);
 
 //You do not desire to acquire lock in future. This will allow the other thread to acquire the lock.
 flag[1] = 0;
